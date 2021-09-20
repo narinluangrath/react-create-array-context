@@ -1,4 +1,6 @@
-export default {
+import type { Config } from '@jest/types';
+
+const config: Config.InitialOptions = {
   // Automatically clear mock calls and instances between every test
   clearMocks: true,
   // The directory where Jest should output its coverage files
@@ -12,3 +14,5 @@ export default {
   // The root directory that Jest should scan for tests and modules within
   // rootDir: undefined,
 };
+
+export default config;
