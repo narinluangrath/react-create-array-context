@@ -7,7 +7,7 @@ export function calculateChangedBitsOfArray<T>(
 ): number {
   let changedBits = 0;
 
-  for (let i = 0; i < nextState.length; i++) {
+  for (let i = 0; i < Math.max(state.length, nextState.length); i++) {
     const isChanged = state[i] !== nextState[i];
     if (isChanged) {
       const bit = 1 << i;
