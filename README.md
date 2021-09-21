@@ -1,6 +1,6 @@
-# React Typescript Package Boilerplate
+# React Create Array Context
 
-> One line description of the purpose of this package
+Efficiently use React Context with arrays
 
 ## Motivation
 
@@ -11,10 +11,10 @@
 ### Install
 
 ```bash
-npm install --save <package-name>
+npm install --save react-create-array-context
 
 # Or yarn
-# yarn add <package-name>
+# yarn add react-create-array-context
 ```
 
 ### Basic Usage
