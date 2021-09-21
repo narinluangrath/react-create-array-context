@@ -1,6 +1,6 @@
 {
   "name": "react-create-array-context",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "description": "Efficiently use React Context with arrays",
   "main": "dist/index.js",
