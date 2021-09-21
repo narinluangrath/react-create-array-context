@@ -1,4 +1,3 @@
-// eslint-disable-next-line
 import React, { createContext, useContext, useState } from "react";
 import type { Context, Dispatch, SetStateAction, FC } from "react";
 
