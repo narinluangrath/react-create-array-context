@@ -1,10 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import type { Dispatch, SetStateAction, FC } from "react";
 
-export type ContextValue<T> = {
-  state: T[];
-  setState: Dispatch<SetStateAction<T[]>>;
-};
+export type ContextValue<T> = [T[], Dispatch<SetStateAction<T[]>>];
 
 export function calculateChangedBitsOfArray<T>(
   contextValue: ContextValue<T>,
@@ -14,10 +11,10 @@ export function calculateChangedBitsOfArray<T>(
 
   for (
     let i = 0;
-    i < Math.max(contextValue?.state?.length, nextContextValue?.state?.length);
+    i < Math.max(contextValue?.[0]?.length, nextContextValue?.[0]?.length);
     i++
   ) {
-    const isChanged = contextValue?.state[i] !== nextContextValue?.state[i];
+    const isChanged = contextValue?.[0][i] !== nextContextValue?.[0][i];
     if (isChanged) {
       const bit = 1 << i;
       changedBits = changedBits | bit;
@@ -46,7 +43,7 @@ export function createArrayContext<T>(): CreateArrayContext<T> {
     initialState: T[];
   }) {
     const [state, setState] = useState<T[]>(initialState);
-    return <ArrayContext.Provider value={{ state, setState }} {...rest} />;
+    return <ArrayContext.Provider value={[state, setState]} {...rest} />;
   }
 
   function useArrayContext(observedIndices: number[] = []) {

@@ -7,54 +7,48 @@ import type { ContextValue } from "./index";
 
 describe("helpers", () => {
   describe("calculateChangedBitsOfArray", () => {
-    const before: ContextValue<string> = {
-      state: [],
-      setState: () => undefined,
-    };
-    const after: ContextValue<string> = {
-      state: [],
-      setState: () => undefined,
-    };
+    const before: ContextValue<string> = [[], () => undefined];
+    const after: ContextValue<string> = [[], () => undefined];
 
     it("puts a 1 in the ith bit if the ith element changed", () => {
-      before.state = ["a", "b", "c"];
-      after.state = ["a", "g", "c"];
+      before[0] = ["a", "b", "c"];
+      after[0] = ["a", "g", "c"];
       expect(calculateChangedBitsOfArray(before, after)).toBe(0b010);
 
-      before.state = ["a", "b", "c"];
-      after.state = ["a", "b", "g"];
+      before[0] = ["a", "b", "c"];
+      after[0] = ["a", "b", "g"];
       expect(calculateChangedBitsOfArray(before, after)).toBe(0b100);
 
-      before.state = ["a", "b", "c"];
-      after.state = ["d", "e", "f"];
+      before[0] = ["a", "b", "c"];
+      after[0] = ["d", "e", "f"];
       expect(calculateChangedBitsOfArray(before, after)).toBe(0b111);
     });
 
     it("handles empty arrays", () => {
-      before.state = [];
-      after.state = [];
+      before[0] = [];
+      after[0] = [];
       expect(calculateChangedBitsOfArray(before, after)).toBe(0b0);
 
-      before.state = [];
-      after.state = ["a", "a", "a"];
+      before[0] = [];
+      after[0] = ["a", "a", "a"];
       expect(calculateChangedBitsOfArray(before, after)).toBe(0b111);
 
-      before.state = ["a", "a", "a"];
-      after.state = [];
+      before[0] = ["a", "a", "a"];
+      after[0] = [];
       expect(calculateChangedBitsOfArray(before, after)).toBe(0b111);
     });
 
     it("handle arrays of unequal size", () => {
-      before.state = ["a"];
-      after.state = ["b", "c", "d"];
+      before[0] = ["a"];
+      after[0] = ["b", "c", "d"];
       expect(calculateChangedBitsOfArray(before, after)).toBe(0b111);
 
-      before.state = ["a"];
-      after.state = ["a", "c", "d"];
+      before[0] = ["a"];
+      after[0] = ["a", "c", "d"];
       expect(calculateChangedBitsOfArray(before, after)).toBe(0b110);
 
-      before.state = ["a", "c", "d"];
-      after.state = ["a"];
+      before[0] = ["a", "c", "d"];
+      after[0] = ["a"];
       expect(calculateChangedBitsOfArray(before, after)).toBe(0b110);
     });
   });
@@ -63,12 +57,12 @@ describe("helpers", () => {
 describe("react-create-array-context", () => {
   const [ArrayContextProvider, useArrayContext] = createArrayContext<string>();
   const ArrayContextConsumer: FC<{
-    onRerender(x: ContextValue<string>["state"]): void;
+    onRerender(x: ContextValue<string>[0]): void;
     observedIndices?: number[];
     setStateValue?: string[];
     text?: string;
   }> = ({ onRerender, observedIndices, setStateValue, text }) => {
-    const { state, setState } = useArrayContext(observedIndices);
+    const [state, setState] = useArrayContext(observedIndices);
     onRerender(state);
     return (
       <button
