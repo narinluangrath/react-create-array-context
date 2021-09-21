@@ -1,6 +1,6 @@
 {
   "name": "react-create-array-context",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": false,
   "description": "Efficiently use React Context with arrays",
   "main": "dist/index.js",
@@ -12,7 +12,7 @@
     "deploy:major": "npm run build && npm version major && npm publish --access public",
     "test": "jest",
     "prepare": "husky install",
-    "docs": "typedoc --out docs src/index.ts"
+    "docs": "typedoc --out docs src/index.tsx"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,7 @@
     "@testing-library/react": "^12.1.0",
     "@types/jest": "^26.0.22",
     "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.9",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
     "babel-jest": "^26.6.3",
