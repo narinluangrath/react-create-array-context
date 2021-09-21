@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React, { createContext, useContext, useState } from "react";
-import type { Context, Dispatch, SetStateAction, ReactElement } from "react";
+import type { Context, Dispatch, SetStateAction, FC } from "react";
 
 export type ContextValue<T> = {
   state: T[];
@@ -29,7 +29,7 @@ export function calculateChangedBitsOfArray<T>(
 }
 
 type CreateArrayContext<T> = [
-  ({ initialState, ...rest }: { initialState: T[] }) => ReactElement,
+  FC<{ initialState: T[] }>,
   (observedIndices?: number[]) => ContextValue<T>,
   Context<ContextValue<T> | null>
 ];

@@ -1,10 +1,8 @@
-// import * as React from 'react';
-// import { screen, render } from '@testing-library/react';
+import * as React from "react";
+import { render } from "@testing-library/react";
+import type { FC } from "react";
 
-import {
-  calculateChangedBitsOfArray,
-  // createArrayContext,
-} from "./index";
+import { calculateChangedBitsOfArray, createArrayContext } from "./index";
 import type { ContextValue } from "./index";
 
 describe("helpers", () => {
@@ -62,26 +60,37 @@ describe("helpers", () => {
   });
 });
 
-// describe("react-create-array-context", () => {
-//   const ArrayContext = createArrayContext<string>([]);
-//   function Provider =
+describe("react-create-array-context", () => {
+  const [ArrayContextProvider, useArrayContext] = createArrayContext<string>();
 
-//   it('handles no second argument to useArrayContext', () => {
-//     const value = ["a", "b", "c"];
-//     const mockOnRerender = jest.fn();
-//     const Consumer = ({ onRerender }: { onRerender: (x: any) => void }) => {
-//       const arrayContext = useArrayContext(ArrayContext);
-//       onRerender(arrayContext);
-//       return null;
-//     }
+  const ArrayContextConsumer: FC<{
+    onRerender(x: ContextValue<string>["state"]): void;
+    observedIndices?: number[];
+    setStateValue?: string[];
+    text?: string;
+  }> = ({ onRerender, observedIndices, setStateValue, text }) => {
+    const { state, setState } = useArrayContext(observedIndices);
+    onRerender(state);
+    return (
+      <button
+        onClick={setStateValue ? () => setState(setStateValue) : undefined}
+      >
+        {text}
+      </button>
+    );
+  };
 
-//     render(
-//       <ArrayContext.Provider value={value}>
-//         <Consumer onRerender={mockOnRerender} />
-//       </ArrayContext.Provider>
-//     )
+  it("handles no argument to useArrayContext", () => {
+    const initialState = ["a", "b", "c"];
+    const mockOnRerender = jest.fn();
 
-//     expect(mockOnRerender).toHaveBeenCalledTimes(1);
-//     expect(mockOnRerender).toHaveBeenCalledWith(value);
-//   })
-// })
+    render(
+      <ArrayContextProvider initialState={initialState}>
+        <ArrayContextConsumer onRerender={mockOnRerender} />
+      </ArrayContextProvider>
+    );
+
+    expect(mockOnRerender).toHaveBeenCalledTimes(1);
+    expect(mockOnRerender).toHaveBeenCalledWith(initialState);
+  });
+});
