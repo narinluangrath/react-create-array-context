@@ -1,5 +1,5 @@
 import * as React from "react";
-import { render } from "@testing-library/react";
+import { act, render, fireEvent, screen } from "@testing-library/react";
 import type { FC } from "react";
 
 import { calculateChangedBitsOfArray, createArrayContext } from "./index";
@@ -62,7 +62,6 @@ describe("helpers", () => {
 
 describe("react-create-array-context", () => {
   const [ArrayContextProvider, useArrayContext] = createArrayContext<string>();
-
   const ArrayContextConsumer: FC<{
     onRerender(x: ContextValue<string>["state"]): void;
     observedIndices?: number[];
@@ -92,5 +91,66 @@ describe("react-create-array-context", () => {
 
     expect(mockOnRerender).toHaveBeenCalledTimes(1);
     expect(mockOnRerender).toHaveBeenCalledWith(initialState);
+  });
+
+  it("rerenders when observed array indices change", () => {
+    const initialState = ["a", "b", "c"];
+    const newState = ["d", "b", "c"];
+    const mockOnRerender = jest.fn();
+    const text = "set state";
+
+    render(
+      <ArrayContextProvider initialState={initialState}>
+        <ArrayContextConsumer
+          onRerender={mockOnRerender}
+          observedIndices={[0]}
+        />
+        <ArrayContextConsumer
+          onRerender={() => undefined}
+          setStateValue={newState}
+          text={text}
+        />
+      </ArrayContextProvider>
+    );
+
+    expect(mockOnRerender).toHaveBeenCalledTimes(1);
+    expect(mockOnRerender).toHaveBeenCalledWith(initialState);
+
+    act(() => {
+      fireEvent.click(screen.getByText(text));
+    });
+
+    expect(mockOnRerender).toHaveBeenCalledTimes(2);
+    expect(mockOnRerender).toHaveBeenCalledWith(newState);
+  });
+
+  it("does not rerender when non-observed array indices change", () => {
+    const initialState = ["a", "b", "c"];
+    const newState = ["a", "d", "f"];
+    const mockOnRerender = jest.fn();
+    const text = "set state";
+
+    render(
+      <ArrayContextProvider initialState={initialState}>
+        <ArrayContextConsumer
+          onRerender={mockOnRerender}
+          observedIndices={[0]}
+        />
+        <ArrayContextConsumer
+          onRerender={() => undefined}
+          setStateValue={newState}
+          text={text}
+        />
+      </ArrayContextProvider>
+    );
+
+    expect(mockOnRerender).toHaveBeenCalledTimes(1);
+    expect(mockOnRerender).toHaveBeenCalledWith(initialState);
+
+    act(() => {
+      fireEvent.click(screen.getByText(text));
+    });
+
+    expect(mockOnRerender).toHaveBeenCalledTimes(1);
   });
 });
